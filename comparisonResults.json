@@ -1,0 +1,555 @@
+
+Comparing commits: {
+    owner: 'fffilps',
+    repo: 'vercel-interview-store',
+    base: '7ed85458f06cad46fee04efd4828933482d5e8e4',
+    head: '7e4385c50aa9589ea014f96eced5ebdce83229fa'
+  }
+  Base commit: {
+    sha: '7ed85458f06cad46fee04efd4828933482d5e8e4',
+    node_id: 'C_kwDONN4vsNoAKDdlZDg1NDU4ZjA2Y2FkNDZmZWUwNGVmZDQ4Mjg5MzM0ODJkNWU4ZTQ',
+    commit: {
+      author: {
+        name: 'fffilps',
+        email: 'jmariwyatt@gmail.com',
+        date: '2024-11-19T23:49:36Z'
+      },
+      committer: {
+        name: 'fffilps',
+        email: 'jmariwyatt@gmail.com',
+        date: '2024-11-19T23:49:36Z'
+      },
+      message: 'ok i see difference and action. sticking to 60 second products and 15 second validation on blogs',
+      tree: {
+        sha: 'b169a45a3fa145f852a027f0c2cc3a59ca1926a5',
+        url: 'https://api.github.com/repos/fffilps/vercel-interview-store/git/trees/b169a45a3fa145f852a027f0c2cc3a59ca1926a5'
+      },
+      url: 'https://api.github.com/repos/fffilps/vercel-interview-store/git/commits/7ed85458f06cad46fee04efd4828933482d5e8e4',
+      comment_count: 0,
+      verification: {
+        verified: false,
+        reason: 'unsigned',
+        signature: null,
+        payload: null,
+        verified_at: null
+      }
+    },
+    url: 'https://api.github.com/repos/fffilps/vercel-interview-store/commits/7ed85458f06cad46fee04efd4828933482d5e8e4',
+    html_url: 'https://github.com/fffilps/vercel-interview-store/commit/7ed85458f06cad46fee04efd4828933482d5e8e4',
+    comments_url: 'https://api.github.com/repos/fffilps/vercel-interview-store/commits/7ed85458f06cad46fee04efd4828933482d5e8e4/comments',
+    author: {
+      login: 'fffilps',
+      id: 60311148,
+      node_id: 'MDQ6VXNlcjYwMzExMTQ4',
+      avatar_url: 'https://avatars.githubusercontent.com/u/60311148?v=4',
+      gravatar_id: '',
+      url: 'https://api.github.com/users/fffilps',
+      html_url: 'https://github.com/fffilps',
+      followers_url: 'https://api.github.com/users/fffilps/followers',
+      following_url: 'https://api.github.com/users/fffilps/following{/other_user}',
+      gists_url: 'https://api.github.com/users/fffilps/gists{/gist_id}',
+      starred_url: 'https://api.github.com/users/fffilps/starred{/owner}{/repo}',
+      subscriptions_url: 'https://api.github.com/users/fffilps/subscriptions',
+      organizations_url: 'https://api.github.com/users/fffilps/orgs',
+      repos_url: 'https://api.github.com/users/fffilps/repos',
+      events_url: 'https://api.github.com/users/fffilps/events{/privacy}',
+      received_events_url: 'https://api.github.com/users/fffilps/received_events',
+      type: 'User',
+      user_view_type: 'public',
+      site_admin: false
+    },
+    committer: {
+      login: 'fffilps',
+      id: 60311148,
+      node_id: 'MDQ6VXNlcjYwMzExMTQ4',
+      avatar_url: 'https://avatars.githubusercontent.com/u/60311148?v=4',
+      gravatar_id: '',
+      url: 'https://api.github.com/users/fffilps',
+      html_url: 'https://github.com/fffilps',
+      followers_url: 'https://api.github.com/users/fffilps/followers',
+      following_url: 'https://api.github.com/users/fffilps/following{/other_user}',
+      gists_url: 'https://api.github.com/users/fffilps/gists{/gist_id}',
+      starred_url: 'https://api.github.com/users/fffilps/starred{/owner}{/repo}',
+      subscriptions_url: 'https://api.github.com/users/fffilps/subscriptions',
+      organizations_url: 'https://api.github.com/users/fffilps/orgs',
+      repos_url: 'https://api.github.com/users/fffilps/repos',
+      events_url: 'https://api.github.com/users/fffilps/events{/privacy}',
+      received_events_url: 'https://api.github.com/users/fffilps/received_events',
+      type: 'User',
+      user_view_type: 'public',
+      site_admin: false
+    },
+    parents: [
+      {
+        sha: '7e4385c50aa9589ea014f96eced5ebdce83229fa',
+        url: 'https://api.github.com/repos/fffilps/vercel-interview-store/commits/7e4385c50aa9589ea014f96eced5ebdce83229fa',
+        html_url: 'https://github.com/fffilps/vercel-interview-store/commit/7e4385c50aa9589ea014f96eced5ebdce83229fa'
+      }
+    ],
+    stats: { total: 10, additions: 6, deletions: 4 },
+    files: [
+      {
+        sha: 'ada6c621fc865f79f48ad61906c02efc23157e56',
+        filename: 'src/app/(marketing)/blog/page.tsx',
+        status: 'modified',
+        additions: 5,
+        deletions: 3,
+        changes: 8,
+        blob_url: 'https://github.com/fffilps/vercel-interview-store/blob/7ed85458f06cad46fee04efd4828933482d5e8e4/src%2Fapp%2F(marketing)%2Fblog%2Fpage.tsx',
+        raw_url: 'https://github.com/fffilps/vercel-interview-store/raw/7ed85458f06cad46fee04efd4828933482d5e8e4/src%2Fapp%2F(marketing)%2Fblog%2Fpage.tsx',
+        contents_url: 'https://api.github.com/repos/fffilps/vercel-interview-store/contents/src%2Fapp%2F(marketing)%2Fblog%2Fpage.tsx?ref=7ed85458f06cad46fee04efd4828933482d5e8e4',
+        patch: "@@ -4,9 +4,8 @@ import Image from 'next/image'\n" +
+          " import { Button } from '@/components/ui/button'\n" +
+          " import { Suspense } from 'react'\n" +
+          ' \n' +
+          '-// Enable streaming and dynamic data\n' +
+          "-export const dynamic = 'force-dynamic'\n" +
+          '-export const revalidate = 0\n' +
+          '+export const experimental_ppr = true\n' +
+          '+export const revalidate = 15 // ISR - revalidate every minute\n' +
+          ' \n' +
+          ' function BlogCardSkeleton() {\n' +
+          '   return (\n' +
+          '@@ -49,6 +48,9 @@ export default async function BlogPage() {\n' +
+          '               )}\n' +
+          '               <div className="p-4">\n' +
+          '                 <h2 className="text-xl font-semibold mb-2">{post.title}</h2>\n' +
+          '+                <div className="text-gray-600 mb-4">\n' +
+          '+                  {post.excerpt}\n' +
+          '+                </div>\n' +
+          '                 <div className="text-gray-600 mb-4">\n' +
+          '                   {new Date(post.publishedAt).toLocaleDateString()}\n' +
+          '                 </div>'
+      },
+      {
+        sha: 'fd7ea32354338ab48038a3e6ce180a74ed954122',
+        filename: 'src/app/products/page.tsx',
+        status: 'modified',
+        additions: 1,
+        deletions: 1,
+        changes: 2,
+        blob_url: 'https://github.com/fffilps/vercel-interview-store/blob/7ed85458f06cad46fee04efd4828933482d5e8e4/src%2Fapp%2Fproducts%2Fpage.tsx',
+        raw_url: 'https://github.com/fffilps/vercel-interview-store/raw/7ed85458f06cad46fee04efd4828933482d5e8e4/src%2Fapp%2Fproducts%2Fpage.tsx',
+        contents_url: 'https://api.github.com/repos/fffilps/vercel-interview-store/contents/src%2Fapp%2Fproducts%2Fpage.tsx?ref=7ed85458f06cad46fee04efd4828933482d5e8e4',
+        patch: "@@ -4,7 +4,7 @@ import { getProducts } from '@/lib/sanity/queries'\n" +
+          " import { SearchForm } from '@/components/product/search-form'\n" +
+          ' \n' +
+          ' export const experimental_ppr = true\n' +
+          '-export const revalidate = 60 // ISR - revalidate every hour\n' +
+          '+export const revalidate = 60 // ISR - revalidate every minute\n' +
+          ' \n' +
+          ' type SearchParams = Promise<{\n' +
+          '   search?: string'
+      }
+    ]
+  }
+  Head commit: {
+    sha: '7e4385c50aa9589ea014f96eced5ebdce83229fa',
+    node_id: 'C_kwDONN4vsNoAKDdlNDM4NWM1MGFhOTU4OWVhMDE0Zjk2ZWNlZDVlYmRjZTgzMjI5ZmE',
+    commit: {
+      author: {
+        name: 'fffilps',
+        email: 'jmariwyatt@gmail.com',
+        date: '2024-11-19T23:40:22Z'
+      },
+      committer: {
+        name: 'fffilps',
+        email: 'jmariwyatt@gmail.com',
+        date: '2024-11-19T23:40:22Z'
+      },
+      message: 'changed how the product page and blog page renders and fetch to be dynamic',
+      tree: {
+        sha: '4cd9b16cff81f9b929dc862fa71c909693c15eab',
+        url: 'https://api.github.com/repos/fffilps/vercel-interview-store/git/trees/4cd9b16cff81f9b929dc862fa71c909693c15eab'
+      },
+      url: 'https://api.github.com/repos/fffilps/vercel-interview-store/git/commits/7e4385c50aa9589ea014f96eced5ebdce83229fa',
+      comment_count: 0,
+      verification: {
+        verified: false,
+        reason: 'unsigned',
+        signature: null,
+        payload: null,
+        verified_at: null
+      }
+    },
+    url: 'https://api.github.com/repos/fffilps/vercel-interview-store/commits/7e4385c50aa9589ea014f96eced5ebdce83229fa',
+    html_url: 'https://github.com/fffilps/vercel-interview-store/commit/7e4385c50aa9589ea014f96eced5ebdce83229fa',
+    comments_url: 'https://api.github.com/repos/fffilps/vercel-interview-store/commits/7e4385c50aa9589ea014f96eced5ebdce83229fa/comments',
+    author: {
+      login: 'fffilps',
+      id: 60311148,
+      node_id: 'MDQ6VXNlcjYwMzExMTQ4',
+      avatar_url: 'https://avatars.githubusercontent.com/u/60311148?v=4',
+      gravatar_id: '',
+      url: 'https://api.github.com/users/fffilps',
+      html_url: 'https://github.com/fffilps',
+      followers_url: 'https://api.github.com/users/fffilps/followers',
+      following_url: 'https://api.github.com/users/fffilps/following{/other_user}',
+      gists_url: 'https://api.github.com/users/fffilps/gists{/gist_id}',
+      starred_url: 'https://api.github.com/users/fffilps/starred{/owner}{/repo}',
+      subscriptions_url: 'https://api.github.com/users/fffilps/subscriptions',
+      organizations_url: 'https://api.github.com/users/fffilps/orgs',
+      repos_url: 'https://api.github.com/users/fffilps/repos',
+      events_url: 'https://api.github.com/users/fffilps/events{/privacy}',
+      received_events_url: 'https://api.github.com/users/fffilps/received_events',
+      type: 'User',
+      user_view_type: 'public',
+      site_admin: false
+    },
+    committer: {
+      login: 'fffilps',
+      id: 60311148,
+      node_id: 'MDQ6VXNlcjYwMzExMTQ4',
+      avatar_url: 'https://avatars.githubusercontent.com/u/60311148?v=4',
+      gravatar_id: '',
+      url: 'https://api.github.com/users/fffilps',
+      html_url: 'https://github.com/fffilps',
+      followers_url: 'https://api.github.com/users/fffilps/followers',
+      following_url: 'https://api.github.com/users/fffilps/following{/other_user}',
+      gists_url: 'https://api.github.com/users/fffilps/gists{/gist_id}',
+      starred_url: 'https://api.github.com/users/fffilps/starred{/owner}{/repo}',
+      subscriptions_url: 'https://api.github.com/users/fffilps/subscriptions',
+      organizations_url: 'https://api.github.com/users/fffilps/orgs',
+      repos_url: 'https://api.github.com/users/fffilps/repos',
+      events_url: 'https://api.github.com/users/fffilps/events{/privacy}',
+      received_events_url: 'https://api.github.com/users/fffilps/received_events',
+      type: 'User',
+      user_view_type: 'public',
+      site_admin: false
+    },
+    parents: [
+      {
+        sha: '4593de5f975e1797ed553cb96bf97a8962ab47ac',
+        url: 'https://api.github.com/repos/fffilps/vercel-interview-store/commits/4593de5f975e1797ed553cb96bf97a8962ab47ac',
+        html_url: 'https://github.com/fffilps/vercel-interview-store/commit/4593de5f975e1797ed553cb96bf97a8962ab47ac'
+      }
+    ],
+    stats: { total: 13, additions: 5, deletions: 8 },
+    files: [
+      {
+        sha: 'cd907589bd42db4acb102fbdf09f34ee510b3d5c',
+        filename: 'src/app/(marketing)/blog/page.tsx',
+        status: 'modified',
+        additions: 3,
+        deletions: 5,
+        changes: 8,
+        blob_url: 'https://github.com/fffilps/vercel-interview-store/blob/7e4385c50aa9589ea014f96eced5ebdce83229fa/src%2Fapp%2F(marketing)%2Fblog%2Fpage.tsx',
+        raw_url: 'https://github.com/fffilps/vercel-interview-store/raw/7e4385c50aa9589ea014f96eced5ebdce83229fa/src%2Fapp%2F(marketing)%2Fblog%2Fpage.tsx',
+        contents_url: 'https://api.github.com/repos/fffilps/vercel-interview-store/contents/src%2Fapp%2F(marketing)%2Fblog%2Fpage.tsx?ref=7e4385c50aa9589ea014f96eced5ebdce83229fa',
+        patch: "@@ -4,8 +4,9 @@ import Image from 'next/image'\n" +
+          " import { Button } from '@/components/ui/button'\n" +
+          " import { Suspense } from 'react'\n" +
+          ' \n' +
+          '-export const experimental_ppr = true\n' +
+          '-export const revalidate = 60 // ISR - revalidate every hour\n' +
+          '+// Enable streaming and dynamic data\n' +
+          "+export const dynamic = 'force-dynamic'\n" +
+          '+export const revalidate = 0\n' +
+          ' \n' +
+          ' function BlogCardSkeleton() {\n' +
+          '   return (\n' +
+          '@@ -48,9 +49,6 @@ export default async function BlogPage() {\n' +
+          '               )}\n' +
+          '               <div className="p-4">\n' +
+          '                 <h2 className="text-xl font-semibold mb-2">{post.title}</h2>\n' +
+          '-                <div className="text-gray-600 mb-4">\n' +
+          '-                  {post.excerpt}\n' +
+          '-                </div>\n' +
+          '                 <div className="text-gray-600 mb-4">\n' +
+          '                   {new Date(post.publishedAt).toLocaleDateString()}\n' +
+          '                 </div>'
+      },
+      {
+        sha: '356206f307360aae99de84f7360b56d7fa7f2e77',
+        filename: 'src/lib/sanity/queries.ts',
+        status: 'modified',
+        additions: 2,
+        deletions: 3,
+        changes: 5,
+        blob_url: 'https://github.com/fffilps/vercel-interview-store/blob/7e4385c50aa9589ea014f96eced5ebdce83229fa/src%2Flib%2Fsanity%2Fqueries.ts',
+        raw_url: 'https://github.com/fffilps/vercel-interview-store/raw/7e4385c50aa9589ea014f96eced5ebdce83229fa/src%2Flib%2Fsanity%2Fqueries.ts',
+        contents_url: 'https://api.github.com/repos/fffilps/vercel-interview-store/contents/src%2Flib%2Fsanity%2Fqueries.ts?ref=7e4385c50aa9589ea014f96eced5ebdce83229fa',
+        patch: '@@ -71,8 +71,7 @@ export const getProducts = cache(async (params?: SearchParams): Promise<Product[\n' +
+          '   }`\n' +
+          ' \n' +
+          '   return client.fetch(query, {}, { \n' +
+          "-    cache: 'force-cache',\n" +
+          "-    next: { revalidate: 3600, tags: ['products'] }\n" +
+          "+    next: { tags: ['products'] }\n" +
+          '   })\n' +
+          ' })\n' +
+          ' \n' +
+          '@@ -197,7 +196,7 @@ export const getBlogPosts = cache(async (): Promise<BlogPost[]> => {\n' +
+          ' \n' +
+          '   return client.fetch(query, {}, {\n' +
+          "     cache: 'force-cache',\n" +
+          "-    next: { revalidate: 3600, tags: ['blog'] }\n" +
+          "+    next: { revalidate: 30, tags: ['blog'] }\n" +
+          '   })\n' +
+          ' })\n' +
+          ' '
+      }
+    ]
+  }
+  Comparison response: {
+    url: 'https://api.github.com/repos/fffilps/vercel-interview-store/compare/7ed85458f06cad46fee04efd4828933482d5e8e4...7e4385c50aa9589ea014f96eced5ebdce83229fa',
+    html_url: 'https://github.com/fffilps/vercel-interview-store/compare/7ed85458f06cad46fee04efd4828933482d5e8e4...7e4385c50aa9589ea014f96eced5ebdce83229fa',
+    permalink_url: 'https://github.com/fffilps/vercel-interview-store/compare/fffilps:7ed8545...fffilps:7e4385c',
+    diff_url: 'https://github.com/fffilps/vercel-interview-store/compare/7ed85458f06cad46fee04efd4828933482d5e8e4...7e4385c50aa9589ea014f96eced5ebdce83229fa.diff',
+    patch_url: 'https://github.com/fffilps/vercel-interview-store/compare/7ed85458f06cad46fee04efd4828933482d5e8e4...7e4385c50aa9589ea014f96eced5ebdce83229fa.patch',
+    base_commit: {
+      sha: '7ed85458f06cad46fee04efd4828933482d5e8e4',
+      node_id: 'C_kwDONN4vsNoAKDdlZDg1NDU4ZjA2Y2FkNDZmZWUwNGVmZDQ4Mjg5MzM0ODJkNWU4ZTQ',
+      commit: {
+        author: [Object],
+        committer: [Object],
+        message: 'ok i see difference and action. sticking to 60 second products and 15 second validation on blogs',
+        tree: [Object],
+        url: 'https://api.github.com/repos/fffilps/vercel-interview-store/git/commits/7ed85458f06cad46fee04efd4828933482d5e8e4',
+        comment_count: 0,
+        verification: [Object]
+      },
+      url: 'https://api.github.com/repos/fffilps/vercel-interview-store/commits/7ed85458f06cad46fee04efd4828933482d5e8e4',
+      html_url: 'https://github.com/fffilps/vercel-interview-store/commit/7ed85458f06cad46fee04efd4828933482d5e8e4',
+      comments_url: 'https://api.github.com/repos/fffilps/vercel-interview-store/commits/7ed85458f06cad46fee04efd4828933482d5e8e4/comments',
+      author: {
+        login: 'fffilps',
+        id: 60311148,
+        node_id: 'MDQ6VXNlcjYwMzExMTQ4',
+        avatar_url: 'https://avatars.githubusercontent.com/u/60311148?v=4',
+        gravatar_id: '',
+        url: 'https://api.github.com/users/fffilps',
+        html_url: 'https://github.com/fffilps',
+        followers_url: 'https://api.github.com/users/fffilps/followers',
+        following_url: 'https://api.github.com/users/fffilps/following{/other_user}',
+        gists_url: 'https://api.github.com/users/fffilps/gists{/gist_id}',
+        starred_url: 'https://api.github.com/users/fffilps/starred{/owner}{/repo}',
+        subscriptions_url: 'https://api.github.com/users/fffilps/subscriptions',
+        organizations_url: 'https://api.github.com/users/fffilps/orgs',
+        repos_url: 'https://api.github.com/users/fffilps/repos',
+        events_url: 'https://api.github.com/users/fffilps/events{/privacy}',
+        received_events_url: 'https://api.github.com/users/fffilps/received_events',
+        type: 'User',
+        user_view_type: 'public',
+        site_admin: false
+      },
+      committer: {
+        login: 'fffilps',
+        id: 60311148,
+        node_id: 'MDQ6VXNlcjYwMzExMTQ4',
+        avatar_url: 'https://avatars.githubusercontent.com/u/60311148?v=4',
+        gravatar_id: '',
+        url: 'https://api.github.com/users/fffilps',
+        html_url: 'https://github.com/fffilps',
+        followers_url: 'https://api.github.com/users/fffilps/followers',
+        following_url: 'https://api.github.com/users/fffilps/following{/other_user}',
+        gists_url: 'https://api.github.com/users/fffilps/gists{/gist_id}',
+        starred_url: 'https://api.github.com/users/fffilps/starred{/owner}{/repo}',
+        subscriptions_url: 'https://api.github.com/users/fffilps/subscriptions',
+        organizations_url: 'https://api.github.com/users/fffilps/orgs',
+        repos_url: 'https://api.github.com/users/fffilps/repos',
+        events_url: 'https://api.github.com/users/fffilps/events{/privacy}',
+        received_events_url: 'https://api.github.com/users/fffilps/received_events',
+        type: 'User',
+        user_view_type: 'public',
+        site_admin: false
+      },
+      parents: [ [Object] ]
+    },
+    merge_base_commit: {
+      sha: '7e4385c50aa9589ea014f96eced5ebdce83229fa',
+      node_id: 'C_kwDONN4vsNoAKDdlNDM4NWM1MGFhOTU4OWVhMDE0Zjk2ZWNlZDVlYmRjZTgzMjI5ZmE',
+      commit: {
+        author: [Object],
+        committer: [Object],
+        message: 'changed how the product page and blog page renders and fetch to be dynamic',
+        tree: [Object],
+        url: 'https://api.github.com/repos/fffilps/vercel-interview-store/git/commits/7e4385c50aa9589ea014f96eced5ebdce83229fa',
+        comment_count: 0,
+        verification: [Object]
+      },
+      url: 'https://api.github.com/repos/fffilps/vercel-interview-store/commits/7e4385c50aa9589ea014f96eced5ebdce83229fa',
+      html_url: 'https://github.com/fffilps/vercel-interview-store/commit/7e4385c50aa9589ea014f96eced5ebdce83229fa',
+      comments_url: 'https://api.github.com/repos/fffilps/vercel-interview-store/commits/7e4385c50aa9589ea014f96eced5ebdce83229fa/comments',
+      author: {
+        login: 'fffilps',
+        id: 60311148,
+        node_id: 'MDQ6VXNlcjYwMzExMTQ4',
+        avatar_url: 'https://avatars.githubusercontent.com/u/60311148?v=4',
+        gravatar_id: '',
+        url: 'https://api.github.com/users/fffilps',
+        html_url: 'https://github.com/fffilps',
+        followers_url: 'https://api.github.com/users/fffilps/followers',
+        following_url: 'https://api.github.com/users/fffilps/following{/other_user}',
+        gists_url: 'https://api.github.com/users/fffilps/gists{/gist_id}',
+        starred_url: 'https://api.github.com/users/fffilps/starred{/owner}{/repo}',
+        subscriptions_url: 'https://api.github.com/users/fffilps/subscriptions',
+        organizations_url: 'https://api.github.com/users/fffilps/orgs',
+        repos_url: 'https://api.github.com/users/fffilps/repos',
+        events_url: 'https://api.github.com/users/fffilps/events{/privacy}',
+        received_events_url: 'https://api.github.com/users/fffilps/received_events',
+        type: 'User',
+        user_view_type: 'public',
+        site_admin: false
+      },
+      committer: {
+        login: 'fffilps',
+        id: 60311148,
+        node_id: 'MDQ6VXNlcjYwMzExMTQ4',
+        avatar_url: 'https://avatars.githubusercontent.com/u/60311148?v=4',
+        gravatar_id: '',
+        url: 'https://api.github.com/users/fffilps',
+        html_url: 'https://github.com/fffilps',
+        followers_url: 'https://api.github.com/users/fffilps/followers',
+        following_url: 'https://api.github.com/users/fffilps/following{/other_user}',
+        gists_url: 'https://api.github.com/users/fffilps/gists{/gist_id}',
+        starred_url: 'https://api.github.com/users/fffilps/starred{/owner}{/repo}',
+        subscriptions_url: 'https://api.github.com/users/fffilps/subscriptions',
+        organizations_url: 'https://api.github.com/users/fffilps/orgs',
+        repos_url: 'https://api.github.com/users/fffilps/repos',
+        events_url: 'https://api.github.com/users/fffilps/events{/privacy}',
+        received_events_url: 'https://api.github.com/users/fffilps/received_events',
+        type: 'User',
+        user_view_type: 'public',
+        site_admin: false
+      },
+      parents: [ [Object] ]
+    },
+    status: 'behind',
+    ahead_by: 0,
+    behind_by: 1,
+    total_commits: 0,
+    commits: [],
+    files: []
+  }
+  Calculated stats: { total_additions: 0, total_deletions: 0, total_changes: 0 }
+  Final response data: {
+    files: [],
+    total_commits: 0,
+    ahead_by: 0,
+    behind_by: 1,
+    base_commit: {
+      sha: '7ed85458f06cad46fee04efd4828933482d5e8e4',
+      node_id: 'C_kwDONN4vsNoAKDdlZDg1NDU4ZjA2Y2FkNDZmZWUwNGVmZDQ4Mjg5MzM0ODJkNWU4ZTQ',
+      commit: {
+        author: [Object],
+        committer: [Object],
+        message: 'ok i see difference and action. sticking to 60 second products and 15 second validation on blogs',
+        tree: [Object],
+        url: 'https://api.github.com/repos/fffilps/vercel-interview-store/git/commits/7ed85458f06cad46fee04efd4828933482d5e8e4',
+        comment_count: 0,
+        verification: [Object]
+      },
+      url: 'https://api.github.com/repos/fffilps/vercel-interview-store/commits/7ed85458f06cad46fee04efd4828933482d5e8e4',
+      html_url: 'https://github.com/fffilps/vercel-interview-store/commit/7ed85458f06cad46fee04efd4828933482d5e8e4',
+      comments_url: 'https://api.github.com/repos/fffilps/vercel-interview-store/commits/7ed85458f06cad46fee04efd4828933482d5e8e4/comments',
+      author: {
+        login: 'fffilps',
+        id: 60311148,
+        node_id: 'MDQ6VXNlcjYwMzExMTQ4',
+        avatar_url: 'https://avatars.githubusercontent.com/u/60311148?v=4',
+        gravatar_id: '',
+        url: 'https://api.github.com/users/fffilps',
+        html_url: 'https://github.com/fffilps',
+        followers_url: 'https://api.github.com/users/fffilps/followers',
+        following_url: 'https://api.github.com/users/fffilps/following{/other_user}',
+        gists_url: 'https://api.github.com/users/fffilps/gists{/gist_id}',
+        starred_url: 'https://api.github.com/users/fffilps/starred{/owner}{/repo}',
+        subscriptions_url: 'https://api.github.com/users/fffilps/subscriptions',
+        organizations_url: 'https://api.github.com/users/fffilps/orgs',
+        repos_url: 'https://api.github.com/users/fffilps/repos',
+        events_url: 'https://api.github.com/users/fffilps/events{/privacy}',
+        received_events_url: 'https://api.github.com/users/fffilps/received_events',
+        type: 'User',
+        user_view_type: 'public',
+        site_admin: false
+      },
+      committer: {
+        login: 'fffilps',
+        id: 60311148,
+        node_id: 'MDQ6VXNlcjYwMzExMTQ4',
+        avatar_url: 'https://avatars.githubusercontent.com/u/60311148?v=4',
+        gravatar_id: '',
+        url: 'https://api.github.com/users/fffilps',
+        html_url: 'https://github.com/fffilps',
+        followers_url: 'https://api.github.com/users/fffilps/followers',
+        following_url: 'https://api.github.com/users/fffilps/following{/other_user}',
+        gists_url: 'https://api.github.com/users/fffilps/gists{/gist_id}',
+        starred_url: 'https://api.github.com/users/fffilps/starred{/owner}{/repo}',
+        subscriptions_url: 'https://api.github.com/users/fffilps/subscriptions',
+        organizations_url: 'https://api.github.com/users/fffilps/orgs',
+        repos_url: 'https://api.github.com/users/fffilps/repos',
+        events_url: 'https://api.github.com/users/fffilps/events{/privacy}',
+        received_events_url: 'https://api.github.com/users/fffilps/received_events',
+        type: 'User',
+        user_view_type: 'public',
+        site_admin: false
+      },
+      parents: [ [Object] ],
+      stats: { total: 10, additions: 6, deletions: 4 },
+      files: [ [Object], [Object] ]
+    },
+    head_commit: {
+      sha: '7e4385c50aa9589ea014f96eced5ebdce83229fa',
+      node_id: 'C_kwDONN4vsNoAKDdlNDM4NWM1MGFhOTU4OWVhMDE0Zjk2ZWNlZDVlYmRjZTgzMjI5ZmE',
+      commit: {
+        author: [Object],
+        committer: [Object],
+        message: 'changed how the product page and blog page renders and fetch to be dynamic',
+        tree: [Object],
+        url: 'https://api.github.com/repos/fffilps/vercel-interview-store/git/commits/7e4385c50aa9589ea014f96eced5ebdce83229fa',
+        comment_count: 0,
+        verification: [Object]
+      },
+      url: 'https://api.github.com/repos/fffilps/vercel-interview-store/commits/7e4385c50aa9589ea014f96eced5ebdce83229fa',
+      html_url: 'https://github.com/fffilps/vercel-interview-store/commit/7e4385c50aa9589ea014f96eced5ebdce83229fa',
+      comments_url: 'https://api.github.com/repos/fffilps/vercel-interview-store/commits/7e4385c50aa9589ea014f96eced5ebdce83229fa/comments',
+      author: {
+        login: 'fffilps',
+        id: 60311148,
+        node_id: 'MDQ6VXNlcjYwMzExMTQ4',
+        avatar_url: 'https://avatars.githubusercontent.com/u/60311148?v=4',
+        gravatar_id: '',
+        url: 'https://api.github.com/users/fffilps',
+        html_url: 'https://github.com/fffilps',
+        followers_url: 'https://api.github.com/users/fffilps/followers',
+        following_url: 'https://api.github.com/users/fffilps/following{/other_user}',
+        gists_url: 'https://api.github.com/users/fffilps/gists{/gist_id}',
+        starred_url: 'https://api.github.com/users/fffilps/starred{/owner}{/repo}',
+        subscriptions_url: 'https://api.github.com/users/fffilps/subscriptions',
+        organizations_url: 'https://api.github.com/users/fffilps/orgs',
+        repos_url: 'https://api.github.com/users/fffilps/repos',
+        events_url: 'https://api.github.com/users/fffilps/events{/privacy}',
+        received_events_url: 'https://api.github.com/users/fffilps/received_events',
+        type: 'User',
+        user_view_type: 'public',
+        site_admin: false
+      },
+      committer: {
+        login: 'fffilps',
+        id: 60311148,
+        node_id: 'MDQ6VXNlcjYwMzExMTQ4',
+        avatar_url: 'https://avatars.githubusercontent.com/u/60311148?v=4',
+        gravatar_id: '',
+        url: 'https://api.github.com/users/fffilps',
+        html_url: 'https://github.com/fffilps',
+        followers_url: 'https://api.github.com/users/fffilps/followers',
+        following_url: 'https://api.github.com/users/fffilps/following{/other_user}',
+        gists_url: 'https://api.github.com/users/fffilps/gists{/gist_id}',
+        starred_url: 'https://api.github.com/users/fffilps/starred{/owner}{/repo}',
+        subscriptions_url: 'https://api.github.com/users/fffilps/subscriptions',
+        organizations_url: 'https://api.github.com/users/fffilps/orgs',
+        repos_url: 'https://api.github.com/users/fffilps/repos',
+        events_url: 'https://api.github.com/users/fffilps/events{/privacy}',
+        received_events_url: 'https://api.github.com/users/fffilps/received_events',
+        type: 'User',
+        user_view_type: 'public',
+        site_admin: false
+      },
+      parents: [ [Object] ],
+      stats: { total: 13, additions: 5, deletions: 8 },
+      files: [ [Object], [Object] ]
+    },
+    commits: [],
+    stats: { total_additions: 0, total_deletions: 0, total_changes: 0 }
+  }
