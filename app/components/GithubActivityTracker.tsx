@@ -83,6 +83,38 @@ interface CompareResult {
   };
 }
 
+function Modal({ 
+  isOpen, 
+  onClose, 
+  children 
+}: { 
+  isOpen: boolean; 
+  onClose: () => void; 
+  children: React.ReactNode;
+}) {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] flex flex-col">
+        <div className="flex justify-end p-4">
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <div className="flex-1 overflow-y-auto p-4">
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function GithubActivityTracker() {
   const [githubUrl, setGithubUrl] = useState('');
   const [owner, setOwner] = useState('');
@@ -94,6 +126,7 @@ export default function GithubActivityTracker() {
   const [selectedCommits, setSelectedCommits] = useState<string[]>([]);
   const [comparison, setComparison] = useState<CompareResult | null>(null);
   const [comparing, setComparing] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const parseGithubUrl = (url: string): { owner: string; repo: string } | null => {
     try {
@@ -173,6 +206,7 @@ export default function GithubActivityTracker() {
 
   const handleCommitSelect = (sha: string) => {
     setComparison(null);
+    setError('');
     
     setSelectedCommits(prev => {
       if (prev.includes(sha)) {
@@ -190,12 +224,30 @@ export default function GithubActivityTracker() {
     
     setComparing(true);
     setComparison(null);
+    setError('');
+    setIsModalOpen(true);
+
+    const firstCommit = activities.find(a => a.sha === selectedCommits[0]);
+    const secondCommit = activities.find(a => a.sha === selectedCommits[1]);
+
+    if (!firstCommit || !secondCommit) {
+      setError('Selected commits not found');
+      setComparing(false);
+      return;
+    }
+
+    const firstDate = new Date(firstCommit.commit.author.date);
+    const secondDate = new Date(secondCommit.commit.author.date);
+    
+    const [base, head] = firstDate < secondDate 
+      ? [firstCommit.sha, secondCommit.sha]
+      : [secondCommit.sha, firstCommit.sha];
 
     console.log('Comparing commits:', {
       owner,
       repo,
-      base: selectedCommits[0],
-      head: selectedCommits[1]
+      base,
+      head
     });
 
     try {
@@ -207,28 +259,28 @@ export default function GithubActivityTracker() {
         body: JSON.stringify({
           owner,
           repo,
-          base: selectedCommits[0],
-          head: selectedCommits[1],
+          base,
+          head,
         }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to compare commits');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to compare commits');
       }
 
       const data = await response.json();
       console.log('Comparison response from API:', data);
-      console.log('Files in comparison:', data.files);
-      console.log('Stats:', {
-        additions: data.files?.reduce((sum, file) => sum + file.additions, 0) || 0,
-        deletions: data.files?.reduce((sum, file) => sum + file.deletions, 0) || 0,
-        filesChanged: data.files?.length || 0
-      });
+      
+      if (!data.base_commit || !data.head_commit) {
+        throw new Error('Invalid comparison data received');
+      }
 
       setComparison(data);
     } catch (err) {
       console.error('Error in comparison:', err);
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : 'An error occurred comparing commits');
+      setComparison(null);
     } finally {
       setComparing(false);
     }
@@ -314,10 +366,13 @@ export default function GithubActivityTracker() {
             </div>
           )}
 
-          {comparison && (
-            <div className="bg-white p-4 rounded-md border">
-              <h3 className="font-medium mb-4">Comparison Summary</h3>
+          <Modal 
+            isOpen={isModalOpen} 
+            onClose={() => setIsModalOpen(false)}
+          >
+            {comparison && (
               <div className="space-y-4">
+                <h3 className="text-xl font-bold">Comparison Summary</h3>
                 <div className="grid grid-cols-3 gap-4 text-center">
                   <div className="bg-green-50 p-2 rounded">
                     <div className="text-lg font-medium text-green-700">
@@ -373,8 +428,8 @@ export default function GithubActivityTracker() {
                   ))}
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </Modal>
 
           <div className="space-y-2">
             {filteredActivities.map((activity) => (
