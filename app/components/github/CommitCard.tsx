@@ -14,6 +14,8 @@ export function CommitCard({ activity, isSelected, onSelect }: CommitCardProps) 
           src={activity.author?.avatar_url}
           alt={activity.author?.login}
           className="w-8 h-8 rounded-full"
+          width={32}
+          height={32}
         />
         <div>
           <span className="font-medium dark:text-white">{activity.author?.login}</span>

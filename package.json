@@ -12,12 +12,15 @@
     "@ai-sdk/google": "^1.0.3",
     "@supabase/supabase-js": "^2.46.1",
     "ai": "^4.0.3",
+    "clsx": "^2.1.1",
     "install": "^0.13.0",
+    "lucide-react": "^0.460.0",
     "next": "15.0.4-canary.22",
     "npm": "^10.9.1",
     "octokit": "^4.0.2",
     "react": "19.0.0-rc-380f5d67-20241113",
-    "react-dom": "19.0.0-rc-380f5d67-20241113"
+    "react-dom": "19.0.0-rc-380f5d67-20241113",
+    "tailwind-merge": "^2.5.4"
   },
   "devDependencies": {
     "@types/node": "^20",

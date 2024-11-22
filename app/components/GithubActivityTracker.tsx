@@ -299,6 +299,7 @@ export default function GithubActivityTracker() {
       }
 
       const data: Summary = await response.json();
+      console.log('Summary response from API:', data);
       setSummary(data.summary);
       setIsModalOpen(true);
     } catch (err) {
