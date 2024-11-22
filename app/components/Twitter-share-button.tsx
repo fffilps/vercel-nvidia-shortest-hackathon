@@ -22,6 +22,13 @@ export function TwitterShareButton({
   if (url) twitterIntentUrl.searchParams.append("url", url)
   if (hashtags && hashtags.length > 0) twitterIntentUrl.searchParams.append("hashtags", hashtags.join(","))
   if (via) twitterIntentUrl.searchParams.append("via", via)
+  // from 27 to 46 need to cut those characters.
+  const taketout = twitterIntentUrl.searchParams.get("text")
+  if (taketout) {
+    const newText = taketout.slice(0, 28) + taketout.slice(74);
+    twitterIntentUrl.searchParams.set("text", newText);
+  }
+
 
   return (
     <Button
@@ -36,4 +43,5 @@ export function TwitterShareButton({
     </Button>
   )
 }
+
 

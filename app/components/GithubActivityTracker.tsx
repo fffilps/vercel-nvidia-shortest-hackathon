@@ -5,6 +5,9 @@ import { CommitCard } from './github/CommitCard';
 import { ComparisonView } from './github/ComparisonView';
 import { Modal } from './ui/Modal';
 import { TwitterShareButton } from '@/app/components/Twitter-share-button'
+import { Switch } from "@/app/components/ui/switch"
+import { Label } from "@/app/components/ui/label"
+import Image from 'next/image';
 
 interface GitUser {
   name: string;
@@ -87,6 +90,22 @@ interface CompareResult {
   };
 }
 
+interface UserActivity {
+  id: string;
+  type: string;
+  actor: {
+    login: string;
+    avatar_url: string;
+  };
+  repo: {
+    name: string;
+    url: string;
+  };
+  payload: {
+    description: string;
+  };
+  created_at: string;
+}
 
 // Helper function to truncate text for Twitter
 function truncateForTwitter(text: string, maxLength: number = 280): string {
@@ -108,6 +127,9 @@ export default function GithubActivityTracker() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [summarizing, setSummarizing] = useState(false);
   const [summary, setSummary] = useState<string | null>(null);
+  const [trackingMode, setTrackingMode] = useState<'repo' | 'user'>('repo');
+  const [username, setUsername] = useState('');
+  const [userActivities, setUserActivities] = useState<UserActivity[]>([]);
 
   const parseGithubUrl = (url: string): { owner: string; repo: string } | null => {
     try {
@@ -153,32 +175,51 @@ export default function GithubActivityTracker() {
     setError('');
     setAuthorFilter('');
 
-    const parsed = parseGithubUrl(githubUrl.trim());
-    
-    if (!parsed) {
-      setError('Invalid GitHub URL. Please enter a valid GitHub repository URL.');
-      setLoading(false);
-      return;
-    }
-
-    setOwner(parsed.owner);
-    setRepo(parsed.repo);
-
     try {
-      const response = await fetch('/api/github-activities', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(parsed),
-      });
+      if (trackingMode === 'repo') {
+        const parsed = parseGithubUrl(githubUrl.trim());
+        
+        if (!parsed) {
+          throw new Error('Invalid GitHub URL');
+        }
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch repository activities');
+        setOwner(parsed.owner);
+        setRepo(parsed.repo);
+
+        const response = await fetch('/api/github-activities', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(parsed),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch repository activities');
+        }
+
+        const data = await response.json();
+        setActivities(data);
+      } else {
+        if (!username.trim()) {
+          throw new Error('Username is required');
+        }
+
+        const response = await fetch('/api/github-activities/user', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username: username.trim() }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch user activities');
+        }
+
+        const data = await response.json();
+        setUserActivities(data);
       }
-
-      const data = await response.json();
-      setActivities(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -316,38 +357,76 @@ export default function GithubActivityTracker() {
 
   return (
     <div className="w-full max-w-2xl mx-auto">
+      <h1 className="text-2xl font-bold mb-6 dark:text-white">GitHub Activity Tracker</h1>
+      
+      <div className="flex items-center space-x-2 mb-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+        <Switch
+          id="tracking-mode"
+          checked={trackingMode === 'user'}
+          onCheckedChange={(checked) => {
+            setTrackingMode(checked ? 'user' : 'repo');
+            setActivities([]);
+            setUserActivities([]);
+            setError('');
+          }}
+        />
+        <Label htmlFor="tracking-mode" className="text-sm font-medium dark:text-gray-200">
+          {trackingMode === 'repo' ? 'Track Repository' : 'Track User'} Activities
+        </Label>
+      </div>
+
       <form onSubmit={handleSubmit} className="mb-8 space-y-4">
-        <div>
-          <label htmlFor="githubUrl" className="block text-sm font-medium mb-1 dark:text-gray-200">
-            GitHub Repository URL
-          </label>
-          <input
-            id="githubUrl"
-            type="text"
-            value={githubUrl}
-            onChange={(e) => setGithubUrl(e.target.value)}
-            className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-            placeholder="https://github.com/owner/repository"
-            required
-          />
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            Example: github.com/fffilps/upgraded-vercel-store
-          </p>
-        </div>
+        {trackingMode === 'repo' ? (
+          <div>
+            <label htmlFor="githubUrl" className="block text-sm font-medium mb-1 dark:text-gray-200">
+              GitHub Repository URL
+            </label>
+            <input
+              id="githubUrl"
+              type="text"
+              value={githubUrl}
+              onChange={(e) => setGithubUrl(e.target.value)}
+              className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              placeholder="https://github.com/owner/repository"
+              required
+            />
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              Example: github.com/fffilps/upgraded-vercel-store
+            </p>
+          </div>
+        ) : (
+          <div>
+            <label htmlFor="username" className="block text-sm font-medium mb-1 dark:text-gray-200">
+              GitHub Username
+            </label>
+            <input
+              id="username"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              placeholder="octocat"
+              required
+            />
+          </div>
+        )}
+
         <button
           type="submit"
           disabled={loading}
           className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 disabled:opacity-50 dark:bg-blue-600 dark:hover:bg-blue-700"
         >
-          {loading ? 'Loading...' : 'Get Activities'}
+          {loading ? 'Loading...' : `Get ${trackingMode === 'repo' ? 'Repository' : 'User'} Activities`}
         </button>
       </form>
 
       {error && (
-        <div className="text-red-500 mb-4 p-4 bg-red-50 dark:bg-red-900/20 rounded-md dark:text-red-400">{error}</div>
+        <div className="text-red-500 mb-4 p-4 bg-red-50 dark:bg-red-900/20 rounded-md dark:text-red-400">
+          {error}
+        </div>
       )}
 
-      {activities.length > 0 && (
+      {trackingMode === 'repo' && activities.length > 0 && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
@@ -444,6 +523,80 @@ export default function GithubActivityTracker() {
           </div>
         </div>
       )}
+
+      {trackingMode === 'user' && userActivities.length > 0 && (
+        <div className="space-y-4">
+          <h2 className="text-xl font-bold dark:text-white mb-4">
+            Activities for {username}
+          </h2>
+          {userActivities.map((activity) => (
+            <div
+              key={activity.id}
+              className="p-4 border rounded-lg dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
+            >
+              <div className="flex items-center gap-4">
+                <Image
+                  src={activity.actor.avatar_url}
+                  alt={activity.actor.login}
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                />
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-medium dark:text-white">{activity.type}</h3>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">
+                      {new Date(activity.created_at).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <a 
+                    href={`https://github.com/${activity.repo.name}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-blue-500 hover:underline"
+                  >
+                    {activity.repo.name}
+                  </a>
+                  {activity.payload && activity.payload.description && (
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                      {activity.payload.description}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <Modal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)}
+      >
+        {comparison && <ComparisonView comparison={comparison} />}
+        {summary && (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xl font-bold dark:text-white">Activity Summary</h3>
+              <TwitterShareButton
+                text={truncateForTwitter(`GitHub Activity Summary for ${owner}/${repo}:\n\n${summary}`)}
+                url={`https://github.com/${owner}/${repo}`}
+                hashtags={['GitHub', 'DevActivity']}
+                className="ml-4"
+              />
+            </div>
+            <div className="prose prose-sm max-w-none dark:prose-invert">
+              <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                {summary.split('\n').map((paragraph, index) => (
+                  <p key={index} className="mb-2">
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 } 

@@ -1,14 +1,23 @@
-import GithubActivityTracker from './components/GithubActivityTracker';
-export default function Home() {
+import { createClient } from '@/utils/supabase/server'
+import { redirect } from 'next/navigation'
+import GithubActivityTracker from '@/app/components/GithubActivityTracker'
+
+
+export default async function Home() {
+  const supabase = await createClient()
+
+  const { data: { user }, error } = await supabase.auth.getUser()
+  if (error || !user) {
+    redirect('/login')
+  }
+
+  if (!user) {
+    redirect('/login')
+  }
 
   return (
-    <div className="min-h-screen p-8">
-      <main className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8 text-center">
-          GitHub Repository Activity Tracker
-        </h1>
-        <GithubActivityTracker />
-      </main>
-    </div>
-  );
+    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+      <GithubActivityTracker />
+    </main>
+  )
 }
