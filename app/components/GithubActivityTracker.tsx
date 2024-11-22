@@ -87,9 +87,6 @@ interface CompareResult {
   };
 }
 
-interface Summary {
-  summary: string;
-}
 
 // Helper function to truncate text for Twitter
 function truncateForTwitter(text: string, maxLength: number = 280): string {
@@ -416,7 +413,7 @@ export default function GithubActivityTracker() {
                 <div className="flex items-center justify-between">
                   <h3 className="text-xl font-bold dark:text-white">Activity Summary</h3>
                   <TwitterShareButton
-                    text={truncateForTwitter(`GitHub Activity Summary for ${owner}/${repo}:\n\n${summary.summary}`)}
+                    text={truncateForTwitter(`GitHub Activity Summary for ${owner}/${repo}:\n\n${summary}`)}
                     url={`https://github.com/${owner}/${repo}`}
                     hashtags={['GitHub', 'DevActivity']}
                     className="ml-4"
