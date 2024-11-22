@@ -1,6 +1,9 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { CommitCard } from './github/CommitCard';
+import { ComparisonView } from './github/ComparisonView';
+import { Modal } from './ui/Modal';
 
 interface GitUser {
   name: string;
@@ -83,36 +86,8 @@ interface CompareResult {
   };
 }
 
-function Modal({ 
-  isOpen, 
-  onClose, 
-  children 
-}: { 
-  isOpen: boolean; 
-  onClose: () => void; 
-  children: React.ReactNode;
-}) {
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] flex flex-col">
-        <div className="flex justify-end p-4">
-          <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-        <div className="flex-1 overflow-y-auto p-4">
-          {children}
-        </div>
-      </div>
-    </div>
-  );
+interface Summary {
+  summary: string;
 }
 
 export default function GithubActivityTracker() {
@@ -127,6 +102,8 @@ export default function GithubActivityTracker() {
   const [comparison, setComparison] = useState<CompareResult | null>(null);
   const [comparing, setComparing] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [summarizing, setSummarizing] = useState(false);
+  const [summary, setSummary] = useState<string | null>(null);
 
   const parseGithubUrl = (url: string): { owner: string; repo: string } | null => {
     try {
@@ -148,6 +125,7 @@ export default function GithubActivityTracker() {
       }
       return null;
     } catch (err) {
+      console.error('Error parsing GitHub URL:', err);
       return null;
     }
   };
@@ -286,11 +264,56 @@ export default function GithubActivityTracker() {
     }
   };
 
+  const handleGenerateSummary = async () => {
+    setSummarizing(true);
+    setSummary(null);
+    setError('');
+
+    try {
+      // Get commits from the last 3 days
+      const threeDaysAgo = new Date();
+      threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+      
+      const recentCommits = activities.filter(activity => 
+        new Date(activity.commit.author.date) > threeDaysAgo
+      );
+
+      if (recentCommits.length === 0) {
+        throw new Error('No commits found in the last 3 days');
+      }
+
+      const response = await fetch('/api/github-activities/summary', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          commits: recentCommits,
+          owner,
+          repo,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate summary');
+      }
+
+      const data: Summary = await response.json();
+      setSummary(data.summary);
+      setIsModalOpen(true);
+    } catch (err) {
+      console.error('Error generating summary:', err);
+      setError(err instanceof Error ? err.message : 'Failed to generate summary');
+    } finally {
+      setSummarizing(false);
+    }
+  };
+
   return (
     <div className="w-full max-w-2xl mx-auto">
       <form onSubmit={handleSubmit} className="mb-8 space-y-4">
         <div>
-          <label htmlFor="githubUrl" className="block text-sm font-medium mb-1">
+          <label htmlFor="githubUrl" className="block text-sm font-medium mb-1 dark:text-gray-200">
             GitHub Repository URL
           </label>
           <input
@@ -298,67 +321,76 @@ export default function GithubActivityTracker() {
             type="text"
             value={githubUrl}
             onChange={(e) => setGithubUrl(e.target.value)}
-            className="w-full px-3 py-2 border rounded-md"
+            className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             placeholder="https://github.com/owner/repository"
             required
           />
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
             Example: github.com/fffilps/upgraded-vercel-store
           </p>
         </div>
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 disabled:opacity-50"
+          className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 disabled:opacity-50 dark:bg-blue-600 dark:hover:bg-blue-700"
         >
           {loading ? 'Loading...' : 'Get Activities'}
         </button>
       </form>
 
       {error && (
-        <div className="text-red-500 mb-4 p-4 bg-red-50 rounded-md">{error}</div>
+        <div className="text-red-500 mb-4 p-4 bg-red-50 dark:bg-red-900/20 rounded-md dark:text-red-400">{error}</div>
       )}
 
       {activities.length > 0 && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-xl font-bold">Repository Activities</h2>
-              <p className="text-sm text-gray-600">
+              <h2 className="text-xl font-bold dark:text-white">Repository Activities</h2>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 {owner}/{repo}
               </p>
             </div>
-            <div className="flex items-center gap-2">
-              <label htmlFor="authorFilter" className="text-sm font-medium">
-                Filter by author:
-              </label>
-              <input
-                id="authorFilter"
-                type="text"
-                value={authorFilter}
-                onChange={(e) => setAuthorFilter(e.target.value)}
-                className="px-3 py-1 border rounded-md text-sm"
-                placeholder="Enter username..."
-              />
+            <div className="flex items-center gap-4">
+              <button
+                onClick={handleGenerateSummary}
+                disabled={summarizing || activities.length === 0}
+                className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 disabled:opacity-50 dark:bg-green-600 dark:hover:bg-green-700"
+              >
+                {summarizing ? 'Generating Summary...' : 'Summarize Recent Changes'}
+              </button>
+              <div className="flex items-center gap-2">
+                <label htmlFor="authorFilter" className="text-sm font-medium dark:text-gray-200">
+                  Filter by author:
+                </label>
+                <input
+                  id="authorFilter"
+                  type="text"
+                  value={authorFilter}
+                  onChange={(e) => setAuthorFilter(e.target.value)}
+                  className="px-3 py-1 border rounded-md text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  placeholder="Enter username..."
+                />
+              </div>
             </div>
           </div>
           
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-gray-600 dark:text-gray-400">
             Showing {filteredActivities.length} of {activities.length} commits
             {authorFilter && ` (filtered by "${authorFilter}")`}
           </div>
 
           {selectedCommits.length > 0 && (
-            <div className="bg-blue-50 p-4 rounded-md">
+            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-md">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="font-medium">Selected Commits: {selectedCommits.length}/2</h3>
-                  <p className="text-sm text-gray-600">Select two commits to compare</p>
+                  <h3 className="font-medium dark:text-white">Selected Commits: {selectedCommits.length}/2</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Select two commits to compare</p>
                 </div>
                 <button
                   onClick={handleCompare}
                   disabled={selectedCommits.length !== 2 || comparing}
-                  className="bg-blue-500 text-white px-4 py-2 rounded-md disabled:opacity-50"
+                  className="bg-blue-500 text-white px-4 py-2 rounded-md disabled:opacity-50 dark:bg-blue-600 dark:hover:bg-blue-700"
                 >
                   {comparing ? 'Comparing...' : 'Compare'}
                 </button>
@@ -370,62 +402,18 @@ export default function GithubActivityTracker() {
             isOpen={isModalOpen} 
             onClose={() => setIsModalOpen(false)}
           >
-            {comparison && (
+            {comparison && <ComparisonView comparison={comparison} />}
+            {summary && (
               <div className="space-y-4">
-                <h3 className="text-xl font-bold">Comparison Summary</h3>
-                <div className="grid grid-cols-3 gap-4 text-center">
-                  <div className="bg-green-50 p-2 rounded">
-                    <div className="text-lg font-medium text-green-700">
-                      +{comparison.base_commit.stats.additions + comparison.head_commit.stats.additions}
-                    </div>
-                    <div className="text-sm text-green-600">Additions</div>
+                <h3 className="text-xl font-bold dark:text-white">Activity Summary</h3>
+                <div className="prose prose-sm max-w-none dark:prose-invert">
+                  <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                    {summary.split('\n').map((paragraph, index) => (
+                      <p key={index} className="mb-2">
+                        {paragraph}
+                      </p>
+                    ))}
                   </div>
-                  <div className="bg-red-50 p-2 rounded">
-                    <div className="text-lg font-medium text-red-700">
-                      -{comparison.base_commit.stats.deletions + comparison.head_commit.stats.deletions}
-                    </div>
-                    <div className="text-sm text-red-600">Deletions</div>
-                  </div>
-                  <div className="bg-gray-50 p-2 rounded">
-                    <div className="text-lg font-medium">
-                      {comparison.base_commit.files.length + comparison.head_commit.files.length}
-                    </div>
-                    <div className="text-sm text-gray-600">Files Changed</div>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  {[...comparison.base_commit.files, ...comparison.head_commit.files].map((file) => (
-                    <div key={file.filename} className="border rounded p-3">
-                      <div className="flex items-center justify-between">
-                        <span className="font-mono text-sm">{file.filename}</span>
-                        <div className="space-x-2 text-sm">
-                          <span className="text-green-600">+{file.additions}</span>
-                          <span className="text-red-600">-{file.deletions}</span>
-                        </div>
-                      </div>
-                      {file.patch && (
-                        <pre className="mt-2 p-2 bg-gray-50 rounded text-xs overflow-x-auto">
-                          {file.patch.split('\n').map((line, i) => {
-                            let lineClass = '';
-                            if (line.startsWith('+')) {
-                              lineClass = 'bg-green-100 text-green-800';
-                            } else if (line.startsWith('-')) {
-                              lineClass = 'bg-red-100 text-red-800';
-                            } else if (line.startsWith('@@ ')) {
-                              lineClass = 'bg-blue-100 text-blue-800';
-                            }
-                            
-                            return (
-                              <div key={i} className={`${lineClass} px-1 font-mono whitespace-pre`}>
-                                {line}
-                              </div>
-                            );
-                          })}
-                        </pre>
-                      )}
-                    </div>
-                  ))}
                 </div>
               </div>
             )}
@@ -433,41 +421,12 @@ export default function GithubActivityTracker() {
 
           <div className="space-y-2">
             {filteredActivities.map((activity) => (
-              <div
+              <CommitCard
                 key={activity.node_id}
-                className={`p-4 border rounded-md hover:bg-gray-50 cursor-pointer ${
-                  selectedCommits.includes(activity.sha) ? 'ring-2 ring-blue-500' : ''
-                }`}
-                onClick={() => handleCommitSelect(activity.sha)}
-              >
-                <div className="flex items-center gap-2">
-                  <img
-                    src={activity.author?.avatar_url}
-                    alt={activity.author?.login}
-                    className="w-8 h-8 rounded-full"
-                  />
-                  <div>
-                    <span className="font-medium">{activity.author?.login}</span>
-                    <p className="text-sm text-gray-600">
-                      {activity.commit.message}
-                    </p>
-                  </div>
-                </div>
-                <div className="mt-2 text-sm text-gray-600">
-                  <a 
-                    href={activity.html_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 hover:underline"
-                  >
-                    {activity.sha.substring(0, 7)}
-                  </a>
-                  <span className="mx-2">•</span>
-                  <span>
-                    {new Date(activity.commit.author.date).toLocaleString()}
-                  </span>
-                </div>
-              </div>
+                activity={activity}
+                isSelected={selectedCommits.includes(activity.sha)}
+                onSelect={handleCommitSelect}
+              />
             ))}
           </div>
         </div>
