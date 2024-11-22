@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import { CommitCard } from './github/CommitCard';
 import { ComparisonView } from './github/ComparisonView';
 import { Modal } from './ui/Modal';
+import { TwitterShareButton } from '@/app/components/Twitter-share-button'
 
 interface GitUser {
   name: string;
@@ -88,6 +89,12 @@ interface CompareResult {
 
 interface Summary {
   summary: string;
+}
+
+// Helper function to truncate text for Twitter
+function truncateForTwitter(text: string, maxLength: number = 280): string {
+  if (text.length <= maxLength) return text;
+  return text.slice(0, maxLength - 3) + '...';
 }
 
 export default function GithubActivityTracker() {
@@ -298,9 +305,9 @@ export default function GithubActivityTracker() {
         throw new Error('Failed to generate summary');
       }
 
-      const data: Summary = await response.json();
+      const data = await response.json();
       console.log('Summary response from API:', data);
-      setSummary(data.summary);
+      setSummary(data)
       setIsModalOpen(true);
     } catch (err) {
       console.error('Error generating summary:', err);
@@ -406,7 +413,15 @@ export default function GithubActivityTracker() {
             {comparison && <ComparisonView comparison={comparison} />}
             {summary && (
               <div className="space-y-4">
-                <h3 className="text-xl font-bold dark:text-white">Activity Summary</h3>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xl font-bold dark:text-white">Activity Summary</h3>
+                  <TwitterShareButton
+                    text={truncateForTwitter(`GitHub Activity Summary for ${owner}/${repo}:\n\n${summary.summary}`)}
+                    url={`https://github.com/${owner}/${repo}`}
+                    hashtags={['GitHub', 'DevActivity']}
+                    className="ml-4"
+                  />
+                </div>
                 <div className="prose prose-sm max-w-none dark:prose-invert">
                   <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
                     {summary.split('\n').map((paragraph, index) => (
