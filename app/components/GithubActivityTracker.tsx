@@ -102,7 +102,16 @@ interface UserActivity {
     url: string;
   };
   payload: {
-    description: string;
+    description?: string;
+    commits?: Array<{
+      message: string;
+    }>;
+    pull_request?: {
+      title: string;
+    };
+    issue?: {
+      title: string;
+    };
   };
   created_at: string;
 }
@@ -218,6 +227,7 @@ export default function GithubActivityTracker() {
         }
 
         const data = await response.json();
+        console.log('User activities:', data);
         setUserActivities(data);
       }
     } catch (err) {
@@ -544,7 +554,18 @@ export default function GithubActivityTracker() {
                 />
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
-                    <h3 className="font-medium dark:text-white">{activity.type}</h3>
+                    <h3 className="font-medium dark:text-white">
+                      {activity.type}
+                      {activity.payload.commits?.[0]?.message && 
+                        ` - ${activity.payload.commits[0].message}`
+                      }
+                      {activity.payload.pull_request?.title && 
+                        ` - ${activity.payload.pull_request.title}`
+                      }
+                      {activity.payload.issue?.title && 
+                        ` - ${activity.payload.issue.title}`
+                      }
+                    </h3>
                     <span className="text-sm text-gray-500 dark:text-gray-400">
                       {new Date(activity.created_at).toLocaleDateString()}
                     </span>
@@ -557,7 +578,7 @@ export default function GithubActivityTracker() {
                   >
                     {activity.repo.name}
                   </a>
-                  {activity.payload && activity.payload.description && (
+                  {activity.payload.description && (
                     <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
                       {activity.payload.description}
                     </p>
