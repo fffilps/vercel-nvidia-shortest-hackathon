@@ -35,6 +35,15 @@ export interface RepoActivity {
   parents: CommitParent[];
 }
 
+export interface CompareResult {
+  files: FileChange[];
+  total_commits: number;
+  ahead_by: number;
+  behind_by: number;
+  base_commit: CommitChange;
+  head_commit: CommitChange;
+}
+
 export interface FileChange {
   filename: string;
   status: string;
@@ -44,51 +53,37 @@ export interface FileChange {
   patch?: string;
 }
 
-export interface CommitStats {
-  total: number;
-  additions: number;
-  deletions: number;
-}
-
-export interface CompareResult {
+export interface CommitChange {
+  stats: {
+    total: number;
+    additions: number;
+    deletions: number;
+  };
   files: FileChange[];
-  total_commits: number;
-  ahead_by: number;
-  behind_by: number;
-  base_commit: {
-    stats: CommitStats;
-    files: FileChange[];
+}
+
+export interface UserActivity {
+  id: string;
+  type: string;
+  actor: {
+    login: string;
+    avatar_url: string;
   };
-  head_commit: {
-    stats: CommitStats;
-    files: FileChange[];
+  repo: {
+    name: string;
+    url: string;
   };
-}
-
-export interface Summary {
-  summary: string;
-}
-
-export interface StatCardProps {
-  value: number;
-  label: string;
-  type: 'addition' | 'deletion' | 'neutral';
-}
-
-export interface CommitCardProps {
-  activity: RepoActivity;
-  isSelected: boolean;
-  onSelect: (sha: string) => void;
-}
-
-export interface ComparisonViewProps {
-  comparison: CompareResult;
-}
-
-export interface FileChangeCardProps {
-  file: FileChange;
-}
-
-export interface CodeDiffProps {
-  patch: string;
+  payload: {
+    description?: string;
+    commits?: Array<{
+      message: string;
+    }>;
+    pull_request?: {
+      title: string;
+    };
+    issue?: {
+      title: string;
+    };
+  };
+  created_at: string;
 } 

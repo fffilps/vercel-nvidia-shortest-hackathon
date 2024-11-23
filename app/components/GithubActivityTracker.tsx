@@ -1,120 +1,14 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { CommitCard } from './github/CommitCard';
 import { ComparisonView } from './github/ComparisonView';
 import { Modal } from './ui/Modal';
-import { TwitterShareButton } from '@/app/components/Twitter-share-button'
-import { Switch } from "@/app/components/ui/switch"
-import { Label } from "@/app/components/ui/label"
-import Image from 'next/image';
-
-interface GitUser {
-  name: string;
-  email: string;
-  date: string;
-}
-
-interface CommitDetails {
-  url: string;
-  author: GitUser;
-  committer: GitUser;
-  message: string;
-  comment_count: number;
-}
-
-interface GithubUser {
-  login: string;
-  id: number;
-  avatar_url: string;
-  html_url: string;
-}
-
-interface CommitParent {
-  url: string;
-  sha: string;
-}
-
-interface RepoActivity {
-  url: string;
-  sha: string;
-  node_id: string;
-  html_url: string;
-  commit: CommitDetails;
-  author: GithubUser;
-  committer: GithubUser;
-  parents: CommitParent[];
-}
-
-interface CompareResult {
-  files: {
-    filename: string;
-    status: string;
-    additions: number;
-    deletions: number;
-    changes: number;
-    patch?: string;
-  }[];
-  total_commits: number;
-  ahead_by: number;
-  behind_by: number;
-  base_commit: {
-    stats: {
-      total: number;
-      additions: number;
-      deletions: number;
-    };
-    files: {
-      filename: string;
-      status: string;
-      additions: number;
-      deletions: number;
-      changes: number;
-      patch?: string;
-    }[];
-  };
-  head_commit: {
-    stats: {
-      total: number;
-      additions: number;
-      deletions: number;
-    };
-    files: {
-      filename: string;
-      status: string;
-      additions: number;
-      deletions: number;
-      changes: number;
-      patch?: string;
-    }[];
-  };
-}
-
-interface UserActivity {
-  id: string;
-  type: string;
-  actor: {
-    login: string;
-    avatar_url: string;
-  };
-  repo: {
-    name: string;
-    url: string;
-  };
-  payload: {
-    description?: string;
-    commits?: Array<{
-      message: string;
-    }>;
-    pull_request?: {
-      title: string;
-    };
-    issue?: {
-      title: string;
-    };
-  };
-  created_at: string;
-}
+import { TwitterShareButton } from './Twitter-share-button';
+import { TrackingModeSwitch } from './github/TrackingModeSwitch';
+import { ActivityInputForm } from './github/ActivityInputForm';
+import { UserActivitiesList } from './github/UserActivitiesList';
+import { RepoActivitiesList } from './github/RepoActivitiesList';
+import { RepoActivity, CompareResult, UserActivity } from '@/app/types/github';
 
 // Helper function to truncate text for Twitter
 function truncateForTwitter(text: string, maxLength: number = 280): string {
@@ -123,22 +17,29 @@ function truncateForTwitter(text: string, maxLength: number = 280): string {
 }
 
 export default function GithubActivityTracker() {
+  // State for both modes
+  const [trackingMode, setTrackingMode] = useState<'repo' | 'user'>('repo');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  // Repository tracking state
   const [githubUrl, setGithubUrl] = useState('');
   const [owner, setOwner] = useState('');
   const [repo, setRepo] = useState('');
   const [authorFilter, setAuthorFilter] = useState('');
   const [activities, setActivities] = useState<RepoActivity[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
   const [selectedCommits, setSelectedCommits] = useState<string[]>([]);
   const [comparison, setComparison] = useState<CompareResult | null>(null);
   const [comparing, setComparing] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [summarizing, setSummarizing] = useState(false);
   const [summary, setSummary] = useState<string | null>(null);
-  const [trackingMode, setTrackingMode] = useState<'repo' | 'user'>('repo');
+
+  // User tracking state
   const [username, setUsername] = useState('');
   const [userActivities, setUserActivities] = useState<UserActivity[]>([]);
+
+  // Modal state
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const parseGithubUrl = (url: string): { owner: string; repo: string } | null => {
     try {
@@ -168,14 +69,11 @@ export default function GithubActivityTracker() {
   const filteredActivities = useMemo(() => {
     if (!authorFilter) return activities;
     
-    const filtered = activities.filter(activity => 
+    return activities.filter(activity => 
       activity.author?.login.toLowerCase().includes(authorFilter.toLowerCase()) ||
       activity.commit.author.name.toLowerCase().includes(authorFilter.toLowerCase()) ||
       activity.commit.author.email.toLowerCase().includes(authorFilter.toLowerCase())
     );
-    
-    console.log(`Found ${filtered.length} commits by author matching "${authorFilter}"`);
-    return filtered;
   }, [activities, authorFilter]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -227,7 +125,6 @@ export default function GithubActivityTracker() {
         }
 
         const data = await response.json();
-        console.log('User activities:', data);
         setUserActivities(data);
       }
     } catch (err) {
@@ -252,80 +149,12 @@ export default function GithubActivityTracker() {
     });
   };
 
-  const handleCompare = async () => {
-    if (selectedCommits.length !== 2) return;
-    
-    setComparing(true);
-    setComparison(null);
-    setError('');
-    setIsModalOpen(true);
-
-    const firstCommit = activities.find(a => a.sha === selectedCommits[0]);
-    const secondCommit = activities.find(a => a.sha === selectedCommits[1]);
-
-    if (!firstCommit || !secondCommit) {
-      setError('Selected commits not found');
-      setComparing(false);
-      return;
-    }
-
-    const firstDate = new Date(firstCommit.commit.author.date);
-    const secondDate = new Date(secondCommit.commit.author.date);
-    
-    const [base, head] = firstDate < secondDate 
-      ? [firstCommit.sha, secondCommit.sha]
-      : [secondCommit.sha, firstCommit.sha];
-
-    console.log('Comparing commits:', {
-      owner,
-      repo,
-      base,
-      head
-    });
-
-    try {
-      const response = await fetch('/api/github-activities/compare', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          owner,
-          repo,
-          base,
-          head,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to compare commits');
-      }
-
-      const data = await response.json();
-      console.log('Comparison response from API:', data);
-      
-      if (!data.base_commit || !data.head_commit) {
-        throw new Error('Invalid comparison data received');
-      }
-
-      setComparison(data);
-    } catch (err) {
-      console.error('Error in comparison:', err);
-      setError(err instanceof Error ? err.message : 'An error occurred comparing commits');
-      setComparison(null);
-    } finally {
-      setComparing(false);
-    }
-  };
-
   const handleGenerateSummary = async () => {
     setSummarizing(true);
     setSummary(null);
     setError('');
 
     try {
-      // Get commits from the last 3 days
       const threeDaysAgo = new Date();
       threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
       
@@ -354,14 +183,73 @@ export default function GithubActivityTracker() {
       }
 
       const data = await response.json();
-      console.log('Summary response from API:', data);
-      setSummary(data)
+      setSummary(data);
       setIsModalOpen(true);
     } catch (err) {
-      console.error('Error generating summary:', err);
       setError(err instanceof Error ? err.message : 'Failed to generate summary');
     } finally {
       setSummarizing(false);
+    }
+  };
+
+  const handleModeChange = (mode: 'repo' | 'user') => {
+    setTrackingMode(mode);
+    setActivities([]);
+    setUserActivities([]);
+    setError('');
+  };
+
+  const handleCompare = async () => {
+    if (selectedCommits.length !== 2) return;
+    
+    setComparing(true);
+    setComparison(null);
+    setError('');
+    setIsModalOpen(true);
+
+    const firstCommit = activities.find(a => a.sha === selectedCommits[0]);
+    const secondCommit = activities.find(a => a.sha === selectedCommits[1]);
+
+    if (!firstCommit || !secondCommit) {
+      setError('Selected commits not found');
+      setComparing(false);
+      return;
+    }
+
+    const firstDate = new Date(firstCommit.commit.author.date);
+    const secondDate = new Date(secondCommit.commit.author.date);
+    
+    const [base, head] = firstDate < secondDate 
+      ? [firstCommit.sha, secondCommit.sha]
+      : [secondCommit.sha, firstCommit.sha];
+
+    try {
+      const response = await fetch('/api/github-activities/compare', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          owner,
+          repo,
+          base,
+          head,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to compare commits');
+      }
+
+      const data = await response.json();
+      setComparison(data);
+    } catch (err) {
+      console.error('Error in comparison:', err);
+      setError(err instanceof Error ? err.message : 'An error occurred comparing commits');
+      setComparison(null);
+    } finally {
+      setComparing(false);
     }
   };
 
@@ -369,66 +257,20 @@ export default function GithubActivityTracker() {
     <div className="w-full max-w-2xl mx-auto">
       <h1 className="text-2xl font-bold mb-6 dark:text-white">GitHub Activity Tracker</h1>
       
-      <div className="flex items-center space-x-2 mb-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-        <Switch
-          id="tracking-mode"
-          checked={trackingMode === 'user'}
-          onCheckedChange={(checked) => {
-            setTrackingMode(checked ? 'user' : 'repo');
-            setActivities([]);
-            setUserActivities([]);
-            setError('');
-          }}
-        />
-        <Label htmlFor="tracking-mode" className="text-sm font-medium dark:text-gray-200">
-          {trackingMode === 'repo' ? 'Track Repository' : 'Track User'} Activities
-        </Label>
-      </div>
+      <TrackingModeSwitch 
+        trackingMode={trackingMode} 
+        onModeChange={handleModeChange} 
+      />
 
-      <form onSubmit={handleSubmit} className="mb-8 space-y-4">
-        {trackingMode === 'repo' ? (
-          <div>
-            <label htmlFor="githubUrl" className="block text-sm font-medium mb-1 dark:text-gray-200">
-              GitHub Repository URL
-            </label>
-            <input
-              id="githubUrl"
-              type="text"
-              value={githubUrl}
-              onChange={(e) => setGithubUrl(e.target.value)}
-              className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-              placeholder="https://github.com/owner/repository"
-              required
-            />
-            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-              Example: github.com/fffilps/upgraded-vercel-store
-            </p>
-          </div>
-        ) : (
-          <div>
-            <label htmlFor="username" className="block text-sm font-medium mb-1 dark:text-gray-200">
-              GitHub Username
-            </label>
-            <input
-              id="username"
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-              placeholder="octocat"
-              required
-            />
-          </div>
-        )}
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 disabled:opacity-50 dark:bg-blue-600 dark:hover:bg-blue-700"
-        >
-          {loading ? 'Loading...' : `Get ${trackingMode === 'repo' ? 'Repository' : 'User'} Activities`}
-        </button>
-      </form>
+      <ActivityInputForm
+        trackingMode={trackingMode}
+        githubUrl={githubUrl}
+        username={username}
+        loading={loading}
+        onGithubUrlChange={setGithubUrl}
+        onUsernameChange={setUsername}
+        onSubmit={handleSubmit}
+      />
 
       {error && (
         <div className="text-red-500 mb-4 p-4 bg-red-50 dark:bg-red-900/20 rounded-md dark:text-red-400">
@@ -436,158 +278,28 @@ export default function GithubActivityTracker() {
         </div>
       )}
 
-      {trackingMode === 'repo' && activities.length > 0 && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-xl font-bold dark:text-white">Repository Activities</h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                {owner}/{repo}
-              </p>
-            </div>
-            <div className="flex items-center gap-4">
-              <button
-                onClick={handleGenerateSummary}
-                disabled={summarizing || activities.length === 0}
-                className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 disabled:opacity-50 dark:bg-green-600 dark:hover:bg-green-700"
-              >
-                {summarizing ? 'Generating Summary...' : 'Summarize Recent Changes'}
-              </button>
-              <div className="flex items-center gap-2">
-                <label htmlFor="authorFilter" className="text-sm font-medium dark:text-gray-200">
-                  Filter by author:
-                </label>
-                <input
-                  id="authorFilter"
-                  type="text"
-                  value={authorFilter}
-                  onChange={(e) => setAuthorFilter(e.target.value)}
-                  className="px-3 py-1 border rounded-md text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                  placeholder="Enter username..."
-                />
-              </div>
-            </div>
-          </div>
-          
-          <div className="text-sm text-gray-600 dark:text-gray-400">
-            Showing {filteredActivities.length} of {activities.length} commits
-            {authorFilter && ` (filtered by "${authorFilter}")`}
-          </div>
-
-          {selectedCommits.length > 0 && (
-            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-md">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="font-medium dark:text-white">Selected Commits: {selectedCommits.length}/2</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Select two commits to compare</p>
-                </div>
-                <button
-                  onClick={handleCompare}
-                  disabled={selectedCommits.length !== 2 || comparing}
-                  className="bg-blue-500 text-white px-4 py-2 rounded-md disabled:opacity-50 dark:bg-blue-600 dark:hover:bg-blue-700"
-                >
-                  {comparing ? 'Comparing...' : 'Compare'}
-                </button>
-              </div>
-            </div>
-          )}
-
-          <Modal 
-            isOpen={isModalOpen} 
-            onClose={() => setIsModalOpen(false)}
-          >
-            {comparison && <ComparisonView comparison={comparison} />}
-            {summary && (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-xl font-bold dark:text-white">Activity Summary</h3>
-                  <TwitterShareButton
-                    text={truncateForTwitter(`GitHub Activity Summary for ${owner}/${repo}:\n\n${summary}`)}
-                    url={`https://github.com/${owner}/${repo}`}
-                    hashtags={['GitHub', 'DevActivity']}
-                    className="ml-4"
-                  />
-                </div>
-                <div className="prose prose-sm max-w-none dark:prose-invert">
-                  <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
-                    {summary.split('\n').map((paragraph, index) => (
-                      <p key={index} className="mb-2">
-                        {paragraph}
-                      </p>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-          </Modal>
-
-          <div className="space-y-2">
-            {filteredActivities.map((activity) => (
-              <CommitCard
-                key={activity.node_id}
-                activity={activity}
-                isSelected={selectedCommits.includes(activity.sha)}
-                onSelect={handleCommitSelect}
-              />
-            ))}
-          </div>
-        </div>
+      {trackingMode === 'repo' && (
+        <RepoActivitiesList
+          activities={activities}
+          filteredActivities={filteredActivities}
+          owner={owner}
+          repo={repo}
+          authorFilter={authorFilter}
+          selectedCommits={selectedCommits}
+          onAuthorFilterChange={setAuthorFilter}
+          onCommitSelect={handleCommitSelect}
+          onGenerateSummary={handleGenerateSummary}
+          onCompare={handleCompare}
+          summarizing={summarizing}
+          comparing={comparing}
+        />
       )}
 
-      {trackingMode === 'user' && userActivities.length > 0 && (
-        <div className="space-y-4">
-          <h2 className="text-xl font-bold dark:text-white mb-4">
-            Activities for {username}
-          </h2>
-          {userActivities.map((activity) => (
-            <div
-              key={activity.id}
-              className="p-4 border rounded-lg dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
-            >
-              <div className="flex items-center gap-4">
-                <Image
-                  src={activity.actor.avatar_url}
-                  alt={activity.actor.login}
-                  width={40}
-                  height={40}
-                  className="rounded-full"
-                />
-                <div className="flex-1">
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-medium dark:text-white">
-                      {activity.type}
-                      {activity.payload.commits?.[0]?.message && 
-                        ` - ${activity.payload.commits[0].message}`
-                      }
-                      {activity.payload.pull_request?.title && 
-                        ` - ${activity.payload.pull_request.title}`
-                      }
-                      {activity.payload.issue?.title && 
-                        ` - ${activity.payload.issue.title}`
-                      }
-                    </h3>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">
-                      {new Date(activity.created_at).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <a 
-                    href={`https://github.com/${activity.repo.name}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-blue-500 hover:underline"
-                  >
-                    {activity.repo.name}
-                  </a>
-                  {activity.payload.description && (
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                      {activity.payload.description}
-                    </p>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+      {trackingMode === 'user' && (
+        <UserActivitiesList
+          activities={userActivities}
+          username={username}
+        />
       )}
 
       <Modal 
