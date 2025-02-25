@@ -5,7 +5,7 @@ import { RepoActivity } from '@/app/types/github';
 
 // Create a custom instance with the API key
 const google = createGoogleGenerativeAI({
-  apiKey: "AIzaSyBmD_JCd9DGcaea4ZRaOT0FzMf4ftjm0mw"
+  apiKey: "AIzaSyAvA4MuVdCjRmRmUU1mAFbYsO9uKUg6abY"
 });
 
 export async function POST(request: Request) {
@@ -14,7 +14,7 @@ export async function POST(request: Request) {
 
     // Filter commits from last 3 days
     const threeDaysAgo = new Date();
-    threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+    threeDaysAgo.setDate(threeDaysAgo.getDate() - 7);
 
     const recentCommits = commits.filter((commit: RepoActivity) => 
       new Date(commit.commit.author.date) > threeDaysAgo
@@ -45,7 +45,7 @@ Please provide a concise summary in a first-person perspective that is positive 
 Format the response in clear sections and keep it technical but accessible.`;
 
     const { text } = await generateText({
-      model: google("models/gemini-1.5-pro-latest"),
+      model: google("models/gemini-2.0-flash"),
       prompt,
       temperature: 0.3,
       maxTokens: 1000,
