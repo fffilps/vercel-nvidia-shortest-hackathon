@@ -5,7 +5,7 @@ import { RepoActivity } from '@/app/types/github';
 
 // Create a custom instance with the API key
 const google = createGoogleGenerativeAI({
-  apiKey: "AIzaSyAvA4MuVdCjRmRmUU1mAFbYsO9uKUg6abY"
+  apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY
 });
 
 export async function POST(request: Request) {
