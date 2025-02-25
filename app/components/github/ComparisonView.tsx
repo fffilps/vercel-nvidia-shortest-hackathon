@@ -20,13 +20,26 @@ export function ComparisonView({ comparison }: ComparisonViewProps) {
         <StatCard
           value={comparison.base_commit.files.length + comparison.head_commit.files.length}
           label="Files Changed"
-          type="neutral"
+          type="default"
         />
       </div>
 
       <div className="space-y-2">
-        {[...comparison.base_commit.files, ...comparison.head_commit.files].map((file) => (
-          <FileChangeCard key={file.filename} file={file} />
+        {[...comparison.base_commit.files, ...comparison.head_commit.files].map((file: {
+          filename: string;
+          additions?: number;
+          deletions?: number;
+          patch?: string;
+        }) => (
+          <FileChangeCard 
+            key={file.filename} 
+            file={{
+              filename: file.filename,
+              additions: file.additions || 0,
+              deletions: file.deletions || 0,
+              patch: file.patch
+            }} 
+          />
         ))}
       </div>
     </div>

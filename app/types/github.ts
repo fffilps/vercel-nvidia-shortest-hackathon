@@ -86,4 +86,67 @@ export interface UserActivity {
     };
   };
   created_at: string;
-} 
+}
+
+export interface CodeDiffProps {
+  patch: string;
+}
+
+export interface CommitCardProps {
+  activity: {
+    sha: string;
+    author: {
+      avatar_url: string;
+      login: string;
+    };
+    commit: {
+      message: string;
+      author: {
+        date: string;
+      };
+    };
+    html_url: string;
+  };
+  isSelected: boolean;
+  onSelect: (sha: string) => void;
+}
+
+export interface FileChangeCardProps {
+  file: {
+    filename: string;
+    additions: number;
+    deletions: number;
+    patch?: string;
+  };
+}
+
+export interface ComparisonViewProps {
+  comparison: {
+    base_commit: {
+      stats: {
+        additions: number;
+        deletions: number;
+      };
+      files: Array<{
+        filename: string;
+        // ... other file properties used in FileChangeCard
+      }>;
+    };
+    head_commit: {
+      stats: {
+        additions: number;
+        deletions: number;
+      };
+      files: Array<{
+        filename: string;
+        // ... other file properties used in FileChangeCard
+      }>;
+    };
+  };
+}
+
+export type StatCardProps = {
+  value: number | string;
+  label: string;
+  type?: 'addition' | 'deletion' | 'default';
+}; 
