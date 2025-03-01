@@ -1,42 +1,52 @@
 import { CommitCardProps } from '@/app/types/github';
 import Image from 'next/image';
+import { CheckCircleIcon, PlusCircleIcon } from '@heroicons/react/24/outline';
 
 export function CommitCard({ activity, isSelected, onSelect }: CommitCardProps) {
   return (
     <div
-      className={`p-4 border dark:border-gray-700 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer ${
-        isSelected ? 'ring-2 ring-blue-500 dark:ring-blue-400' : ''
+      className={`p-4 border rounded-lg transition-colors ${
+        isSelected 
+          ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' 
+          : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
       }`}
-      onClick={() => onSelect(activity.sha)}
     >
-      <div className="flex items-center gap-2">
-        <Image
-          src={activity.author?.avatar_url}
-          alt={activity.author?.login}
-          className="w-8 h-8 rounded-full"
-          width={32}
-          height={32}
-        />
-        <div>
-          <span className="font-medium dark:text-white">{activity.author?.login}</span>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            {activity.commit.message}
+      <div className="flex items-center gap-4">
+        <div className="flex-shrink-0">
+          <Image
+            src={activity.author.avatar_url}
+            alt={activity.author.login}
+            width={40}
+            height={40}
+            className="rounded-full"
+          />
+        </div>
+        <div className="flex-grow">
+          <div className="flex items-center gap-2">
+            <span className="font-medium dark:text-white">{activity.author.login}</span>
+            <span className={`text-sm px-2 py-1 rounded ${
+              activity.type === 'pull' 
+                ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-300'
+                : 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300'
+            }`}>
+              {activity.type}
+            </span>
+          </div>
+          <p className="text-sm text-gray-600 dark:text-gray-400">{activity.commit.message}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-500">
+            {new Date(activity.commit.author.date).toLocaleDateString()}
           </p>
         </div>
-      </div>
-      <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-        <a 
-          href={activity.html_url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-blue-500 hover:underline dark:text-blue-400"
+        <button
+          onClick={() => onSelect(activity.sha)}
+          className="flex-shrink-0 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full"
         >
-          {activity.sha.substring(0, 7)}
-        </a>
-        <span className="mx-2">•</span>
-        <span>
-          {new Date(activity.commit.author.date).toLocaleString()}
-        </span>
+          {isSelected ? (
+            <CheckCircleIcon className="w-6 h-6 text-blue-500" />
+          ) : (
+            <PlusCircleIcon className="w-6 h-6 text-gray-400" />
+          )}
+        </button>
       </div>
     </div>
   );
