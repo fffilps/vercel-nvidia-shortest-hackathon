@@ -33,6 +33,7 @@ export interface RepoActivity {
   author: GithubUser;
   committer: GithubUser;
   parents: CommitParent[];
+  type: 'pull' | 'commit';
 }
 
 export interface CompareResult {
