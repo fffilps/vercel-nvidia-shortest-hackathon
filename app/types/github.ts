@@ -106,6 +106,7 @@ export interface CommitCardProps {
       };
     };
     html_url: string;
+    type: 'pull' | 'commit';
   };
   isSelected: boolean;
   onSelect: (sha: string) => void;
