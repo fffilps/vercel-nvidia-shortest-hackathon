@@ -41,7 +41,7 @@ export default function LoginPage() {
             Congratulations! 🎉
           </h2>
           <p className="mt-2 text-gray-600 dark:text-gray-400">
-            You've completed the puzzle! Would you like to save your progress?
+            You&pos;ve completed the puzzle! Would you like to save your progress?
           </p>
         </div>
 
